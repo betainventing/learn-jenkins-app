@@ -7,7 +7,7 @@ services:
       - DOCKER_TLS_CERTDIR=/certs
     volumes:
       - jenkins-docker-certs:/certs/client
-      #- jenkins-data:/var/jenkins_home
+      - jenkins-data:/var/jenkins_home
     ports:
       - "2376:2376"
     networks:
