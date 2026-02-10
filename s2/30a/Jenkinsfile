@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('w/o docker') {
+            steps {
+                sh '''
+                    echo "Without docker"
+                    ls -la
+                    pwd
+                    touch without-docker.txt
+                    echo "no docker agent, workspace is on the jenkins agent" >> without-docker.txt
+                    ls -la
+                    cat without-docker.txt 
+                '''
+            }
+        }
+
+        stage('w/ docker') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo "using docker agent"
+                    ls -la
+                    pwd
+                    touch with-docker.txt
+                    echo "docker agent, workspace is on the docker container" >> with-docker.txt
+                    ls -la
+                    cat with-docker.txt
+                '''
+            }
+        }
+    }
+}
