@@ -1,7 +1,9 @@
+name: ${COMPOSE_PROJECT_NAME}
+
 services:
-  jenkins-docker:
+  docker-daemon:
     image: docker:dind
-    container_name: jenkins-docker
+    container_name: ${COMPOSE_PROJECT_NAME}-docker-daemon
     privileged: true
     environment:
       - DOCKER_TLS_CERTDIR=/certs
@@ -9,18 +11,18 @@ services:
       - jenkins-docker-certs:/certs/client
       - jenkins-data:/var/jenkins_home
     ports:
-      - "2376:2376"
+      - "${DIND_PORT}:2376" # Dynamic host port
     networks:
       jenkins:
         aliases:
           - docker
     command: --storage-driver overlay2
 
-  my-jenkins:
-    image: my-jenkins
+  jenkins-controller:
+    image: jenkins-controller
     build:
       context: .
-    container_name: my-jenkins
+    container_name: ${COMPOSE_PROJECT_NAME}-jenkins-controller
     restart: on-failure
     environment:
       - DOCKER_HOST=tcp://docker:2376
@@ -30,8 +32,8 @@ services:
       - jenkins-data:/var/jenkins_home
       - jenkins-docker-certs:/certs/client:ro
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - "${JENKINS_PORT}:8080"  # Dynamic host port
+      - "${AGENT_PORT}:50000"   # Dynamic host port
     networks:
       - jenkins
 
@@ -40,5 +42,6 @@ networks:
     driver: bridge
 
 volumes:
+  # Docker prefixes these with project name automatically (e.g. dev_jenkins-data)
   jenkins-docker-certs:
   jenkins-data:

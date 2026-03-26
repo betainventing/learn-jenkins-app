@@ -1,3 +1,4 @@
+name: project1
 services:
   jenkins-docker:
     image: docker:dind
@@ -30,8 +31,8 @@ services:
       - jenkins-data:/var/jenkins_home
       - jenkins-docker-certs:/certs/client:ro
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - "8081:8080"
+      - "50001:50000"
     networks:
       - jenkins
 
