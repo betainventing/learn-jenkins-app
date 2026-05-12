@@ -1,0 +1,3 @@
+build in '30.Workspace-synchronisation' creates two jenkins workspace directories - one for the stage without docker and another for the stage with docker. The workspace directory for the stage with docker is mounted as a volume in the docker container. there is no synchronisation between the two workspace directories. files created in one stage are not visible in the other stage.
+
+solution: check altered Jenkinsfile.
