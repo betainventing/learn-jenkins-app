@@ -2,6 +2,7 @@ pipeline {
     agent any
     
     stages {
+
         stage('BUILD') {
             agent {
                 docker {
@@ -11,16 +12,12 @@ pipeline {
             }
             steps {
                 sh '''
-                    pwd
-                    ls -la
-                    node --version
-                    npm --version
                     npm ci
                     npm run build
-                    ls -la                       
                 '''
             }
         }
+
         stage('TEST') {
             agent {
                 docker {
@@ -30,9 +27,9 @@ pipeline {
             }
             steps {
                 sh '''
-                   test -f build/index.html
-                   echo $? 
-                   npm test
+                   CI=true npm test -- --watchAll=false
+                   echo "=== TEST RESULTS ==="
+                   find . -name "*.xml"
                 '''
             }            
         }
@@ -49,7 +46,11 @@ pipeline {
                    npm install serve
                    node_modules/.bin/serve -s build &
                    sleep 15
-                   npx playwright test 
+
+                   npx playwright test
+
+                   echo "=== PLAYWRIGHT RESULTS ==="
+                   find . -name "*.xml"
                 '''
             }
         }
@@ -57,7 +58,7 @@ pipeline {
     
     post {
         always {
-            junit 'test-results/junit.xml'
+            junit 'test-results/*.xml'
         }
     }
 }
