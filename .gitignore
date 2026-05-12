@@ -1,2 +1,4 @@
 jenkins-backup*
 *.tar.gz
+.vscode/
+.vscode
