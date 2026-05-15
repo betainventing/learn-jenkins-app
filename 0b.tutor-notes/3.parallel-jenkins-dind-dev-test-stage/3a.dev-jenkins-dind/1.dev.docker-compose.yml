@@ -10,6 +10,7 @@ services:
     volumes:
       - jenkins-docker-certs:/certs/client
       - jenkins-data:/var/jenkins_home
+      - dind_storage:/var/lib/docker
     ports:
       - "${DIND_PORT}:2376" # Dynamic host port
     networks:
@@ -45,3 +46,4 @@ volumes:
   # Docker prefixes these with project name automatically (e.g. dev_jenkins-data)
   jenkins-docker-certs:
   jenkins-data:
+  dind_storage:
