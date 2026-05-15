@@ -34,9 +34,10 @@ pipeline {
 
             steps {
                 sh '''
-                    #test -f build/index.html
+                    test -f build/index.html
+                    echo $?
                     npm test
-                    test -f test-results/junit.xml
+                    test -f jest-results/junit.xml
                     echo $?
                 '''
             }
