@@ -48,12 +48,22 @@ pipeline {
             }
             steps {
                 sh '''
-                    ls -la
+                    echo "===== BUILD STAGE ====="
+
                     node --version
                     npm --version
+
+                    echo "Installing dependencies..."
                     npm ci
+
+                    echo "Running production build..."
                     npm run build
+
+                    echo "Listing workspace contents..."
                     ls -la
+
+                    echo "Listing build directory..."
+                    ls -la build || true
                 '''
             }
         }        
