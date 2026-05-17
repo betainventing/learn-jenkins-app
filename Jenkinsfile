@@ -16,7 +16,6 @@ pipeline {
     }
 
     stages {
-
         stage('Prepare Workspace') {
             steps {
 
@@ -138,30 +137,13 @@ pipeline {
 
                     kill ${SERVER_PID}
                 '''
-            }
-            post {
-
-                always {
-
-                    archiveArtifacts artifacts: 'serve.log', allowEmptyArchive: true
-
-                    archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
-
-                    publishHTML([
-                        allowMissing: true,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'playwright-report',
-                        reportFiles: 'index.html',
-                        reportName: 'Playwright HTML Report'
-                    ])
-                }
-            }            
+            }         
         }
+    }
+        
     post {
         always {
             junit 'jest-results/junit.xml'
-/*
             publishHTML([
                 allowMissing: false, 
                 alwaysLinkToLastBuild: false, 
@@ -172,7 +154,6 @@ pipeline {
                 reportTitles: '', 
                 useWrapperFileDirectly: true
             ])           
-        }
-*/        
+        }   
     }
 }
