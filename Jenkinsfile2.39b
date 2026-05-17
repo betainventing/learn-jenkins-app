@@ -11,28 +11,6 @@ pipeline {
     }
 
     stages {
-
-        stage('Prepare Workspace') {
-            steps {
-
-                echo 'Cleaning old workspace...'
-
-                // Cleans previous build files
-                cleanWs()
-
-                echo 'Checking out source code...'
-
-                // Manual SCM checkout
-                checkout scm
-
-                sh '''
-                    echo "Workspace after checkout:"
-                    pwd
-                    ls -la
-                '''
-            }
-        }
-
         stage('Build') {
             agent {
                 docker {
