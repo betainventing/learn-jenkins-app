@@ -2,8 +2,12 @@ pipeline {
     agent any
 
     options {
+        // Prevent Jenkins from automatically checking out source code
+        // before stages begin.
+        skipDefaultCheckout(true)
+
         // Adds timestamps to console logs
-        timestamps()        
+        timestamps()      
     }
 
     stages {
