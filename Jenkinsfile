@@ -139,7 +139,7 @@ pipeline {
                     kill ${SERVER_PID}
                 '''
             }
-    }
+        }
     post {
         always {
             junit 'jest-results/junit.xml'
