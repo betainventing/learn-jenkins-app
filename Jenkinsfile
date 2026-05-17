@@ -97,34 +97,40 @@ pipeline {
 
             steps {
                 sh '''
-                    bash -c '
-                        set -euxo pipefail
+                    bash <<'EOF'
 
-                        echo "===== E2E TEST STAGE ====="
+                    set -euxo pipefail
 
-                        node --version
-                        npm --version
+                    echo "===== E2E TEST STAGE ====="
 
-                        npm ci
+                    node --version
+                    npm --version
 
-                        npm install --no-save serve
+                    npm ci
 
-                        npx serve -s build -l 3000 > serve.log 2>&1 &
+                    npm install --no-save serve
 
-                        SERVER_PID=$!
+                    npx serve -s build -l 3000 > serve.log 2>&1 &
 
-                        timeout 60 sh -c "
-                            until curl -f http://127.0.0.1:3000
-                            do
-                                echo Waiting for app...
-                                sleep 2
-                            done
-                        "
+                    SERVER_PID=$!
 
-                        npx playwright test --reporter=html
+                    cleanup() {
+                        kill ${SERVER_PID} || true
+                    }
 
-                        kill ${SERVER_PID}
+                    trap cleanup EXIT
+
+                    timeout 60 bash -c '
+                        until curl -f http://127.0.0.1:3000
+                        do
+                            echo "Waiting for app..."
+                            sleep 2
+                        done
                     '
+
+                    npx playwright test --reporter=html
+
+                    EOF
                 '''
             }         
         }
