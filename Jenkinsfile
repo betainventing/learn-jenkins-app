@@ -10,6 +10,11 @@ pipeline {
         timestamps()      
     }
 
+    environment {
+        // Optional: improves npm reliability in CI
+        CI = 'true'
+    }
+
     stages {
 
         stage('Prepare Workspace') {
