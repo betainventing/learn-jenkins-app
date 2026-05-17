@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    options {
-        // Adds timestamps to console logs
-        timestamps()        
-    }
-
     stages {
         stage('Build') {
             agent {
