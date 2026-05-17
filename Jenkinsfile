@@ -96,51 +96,40 @@ pipeline {
             }
 
             steps {
-
                 sh '''
-                    set -euxo pipefail
+                    bash -c '
+                        set -euxo pipefail
 
-                    echo "===== E2E TEST STAGE ====="
+                        echo "===== E2E TEST STAGE ====="
 
-                    node --version
-                    npm --version
+                        node --version
+                        npm --version
 
-                    echo "Installing project dependencies..."
-                    npm ci
+                        npm ci
 
-                    echo "Installing local static web server..."
-                    npm install --no-save serve
+                        npm install --no-save serve
 
-                    echo "Starting application server..."
+                        npx serve -s build -l 3000 > serve.log 2>&1 &
 
-                    npx serve -s build -l 3000 > serve.log 2>&1 &
+                        SERVER_PID=$!
 
-                    SERVER_PID=$!
+                        timeout 60 sh -c "
+                            until curl -f http://127.0.0.1:3000
+                            do
+                                echo Waiting for app...
+                                sleep 2
+                            done
+                        "
 
-                    echo "Server PID: ${SERVER_PID}"
+                        npx playwright test --reporter=html
 
-                    echo "Waiting for application readiness..."
-
-                    timeout 60 sh -c '
-                        until curl -f http://127.0.0.1:3000
-                        do
-                            echo "Waiting for app..."
-                            sleep 2
-                        done
+                        kill ${SERVER_PID}
                     '
-
-                    echo "Running Playwright E2E tests..."
-
-                    npx playwright test --reporter=html
-
-                    echo "Stopping application server..."
-
-                    kill ${SERVER_PID}
                 '''
             }         
         }
     }
-        
+
     post {
         always {
             junit 'jest-results/junit.xml'
