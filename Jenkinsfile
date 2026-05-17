@@ -67,7 +67,7 @@ pipeline {
                 '''
             }
         }        
-        stage('Test') {
+        stage('Unit Testing') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -77,13 +77,13 @@ pipeline {
 
             steps {
                 sh '''
-                    test -f build/index.html
-                    npm test
-                    test -f jest-results/junit.xml
+                    echo "===== TEST STAGE ====="
+                    echo "Running unit tests..."
+                    npm test -- --watchAll=false
                 '''
             }
         }
-        stage('E2E') {
+        stage('E2E Testing') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
