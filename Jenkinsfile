@@ -37,6 +37,8 @@ pipeline {
             agent {
                 docker {
                     image 'node:18-alpine'
+
+                    // Reuse Jenkins workspace inside container
                     reuseNode true
                 }
             }
