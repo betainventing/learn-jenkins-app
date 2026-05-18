@@ -98,20 +98,13 @@ pipeline {
             steps {
                 sh '''
                     bash -c '
-
                         set -euxo pipefail
-
                         echo "===== E2E TEST STAGE ====="
-
                         node --version
                         npm --version
-
                         npm ci
-
                         npm install --no-save serve
-
                         npx serve -s build -l 3000 > serve.log 2>&1 &
-
                         SERVER_PID=$!
 
                         cleanup() {
