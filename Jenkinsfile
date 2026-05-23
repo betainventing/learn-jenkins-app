@@ -69,6 +69,7 @@ pipeline {
                     agent {
                         docker {
                             image 'node:18-alpine'
+                            reuseNode true
                         }
                     }
 
@@ -99,6 +100,7 @@ pipeline {
                     agent {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
                         }
                     }
 
