@@ -55,8 +55,16 @@ pipeline {
                  Save source + build artifacts
                 */
                 stash name: 'app-source',
-                      includes: '**/*',
-                      useDefaultExcludes: false
+                    includes: '''
+                        build/**,
+                        src/**,
+                        public/**,
+                        e2e/**,
+                        package.json,
+                        package-lock.json,
+                        playwright.config.js
+                        tests-examples/**
+                    '''
             }
         }
 
